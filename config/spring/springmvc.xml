@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+ 			http://www.springframework.org/schema/beans 
+ 			http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+ 			http://www.springframework.org/schema/mvc 
+ 			http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+ 			http://www.springframework.org/schema/context 
+ 			http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+ 			http://www.springframework.org/schema/aop 
+ 			http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+ 			http://www.springframework.org/schema/tx 
+ 			http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+
+	<!-- 配置Handler -->
+	<!-- 使用组件扫描 -->
+	<context:component-scan base-package="com.abc.controller"></context:component-scan>
+	<context:component-scan base-package="com.abc.service.impl"></context:component-scan>
+	
+
+	<!-- 注解驱动 -->
+	<!-- conversion-service为参数转换服务，用来将特定传入参数进行自动转换 -->	 
+	<mvc:annotation-driven ></mvc:annotation-driven>
+
+	
+	
+	
+	<!-- 全局异常处理器 -->
+	<!-- 只要实现了HandlerExceptionResolver接口就是全局异常处理器，注意：不能配置多个 -->
+	<bean class="com.abc.resolver.CustomExceptionResolver"></bean>
+	
+	
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<!-- 登录拦截器：支持ssm项目登录验证功能 -->
+		<mvc:interceptor>
+			<!-- path属性中，如果是*，则拦截*号所在的所有地址，例如/items/queryItems,/items/editItems等 -->
+			<!-- path属性中，如果是**，则拦截更深层的所有地址，例如/items/queryItems,/items/ssm/editItems等 -->
+			<mvc:mapping path="/**"/> 
+			<bean class="com.abc.interceptor.LoginInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件最大尺寸为5MB -->
+		<property name="maxUploadSize">
+			<value>5242880</value>
+		</property>
+	</bean>
+	
+	
+</beans>
+
+
+
+
